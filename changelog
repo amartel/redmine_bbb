@@ -1,19 +1,2 @@
-0.1.3 : 2010-08-26
-fixed: add better support to Windows XP + MSOffice XP (thanks to Xabier Elkano) 
-fixed: urls in PROPFIND responses are now encoded (for multi-bytes charset support) 
-fixed: copy directory is now recursive (filesystem SCM)
-
-0.1.2 : 2010-08-23
-fixed: Office documents are now opened with read/write access
-
-0.1.1 : 2010-08-03
-new: support for Read/Write operations on filesystem SCM
-
-0.1.0 : 2010-07-23
-Minor evolution with refactoring...
-
-new: add repository access through WEBDAV (Read/Write for subversion if repositories are on the redmine server, Read only for all others supported SCM)
-new: settings per project with new permission (manage WEBDAV)
-
-0.0.1 : 2010-07-06
+0.0.1 : 2010-09-16
 Initial release
