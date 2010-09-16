@@ -1,0 +1,8 @@
+# English strings go
+en:
+  label_bigbluebutton: Web meeting
+  label_bigbluebutton_join: Enter meeting
+  label_bigbluebutton_people: "Connected people"
+  label_bigbluebutton_status: "State"
+  label_bigbluebutton_status_running: Running
+  label_bigbluebutton_status_closed: Not started
