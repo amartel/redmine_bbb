@@ -1,2 +1,32 @@
 h1. Introduction
 
+This plugin allows to start and join web meetings using a BigBlueButton server (http://bigbluebutton.org server)
+
+h1. Setup
+
+h3. 1. Install plugin into vendor/plugins
+
+Install redmine_bbb with:
+* ruby script/plugin install http://github.com/amartel/redmine_bbb.git
+
+No DB migration is required...
+
+h3. 2. Restart your web server
+
+
+h3. 3. Configure REDMINE with your web browser
+
+If everything is OK, you should see BigBlueButton plugin in the plugin list (Administration -> Plugins)
+Then, you have to configure the plugin:
+* url of your BigBlueButton server
+* salt of your BBB server (to allow use of APIs)
+* url where to be redirected at the end of the meeting (leave blank if you want to be redirected to the project's overview tab)
+* choose if you want to start the meeting in a popup window or not. A popup window is useful because it allows you to resize the windows at the maximum size with chat available... (When switching to fullscreen, chat is disable due to security reasons in the flash plugin...)
+
+A new permission is now available (BigBlueButton -> Bigbluebutton access) and you have to assign it to the roles you need
+
+When the plugin is activated in a project, you should see a new section "virtual meeting" in the project's overview tab. If not, check your settings (the plugin doesn't display the section if it is not possible to open a connection with the BBB server...)
+
+h1. History
+
+0.0.1: Initial release
