@@ -11,11 +11,11 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
         if Setting.plugin_redmine_bbb['bbb_popup'] != '1'
           output << link_to(l(:label_bigbluebutton_join), {:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true})
         else
-          output << "<a href='' onclick='javascript:open(\"" + url_for(:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true) + "\",\"Meeting\",\"directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,width=screen.width,height=screen.height\");return false;'>#{l(:label_bigbluebutton_join)}</a>"
+          output << "<a href='' onclick='javascript:var wihe = \"width=\"+screen.availWidth+\",height=\"+screen.availHeight; open(\"" + url_for(:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true) + "\",\"Meeting\",\"directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,\" + wihe);return false;'>#{l(:label_bigbluebutton_join)}</a>"
         end
         output << "<br><br>"
 
-        server = server = Setting.plugin_redmine_bbb['bbb_server']
+        server = Setting.plugin_redmine_bbb['bbb_ip']
         #First, test if meeting room already exists
         data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + Digest::SHA1.hexdigest("root"+@project.identifier), true)
         doc = ActiveSupport::XmlMini.parse(data)
