@@ -1,0 +1,9 @@
+# Dutch strings go
+nl:
+  label_bigbluebutton: Webvergadering
+  label_bigbluebutton_join: Vergadering bijwonen
+  label_bigbluebutton_people: "Aanwezigen"
+  label_bigbluebutton_status: "Status"
+  label_bigbluebutton_status_running: Bezig
+  label_bigbluebutton_status_closed: Niet begonnen
+
