@@ -1,2 +1,7 @@
+0.1.0 : 2010-10-14
+new: Dutch localization
+fixed: change URI.escape() with CGI.escape() for better support of extended chars in usernames
+and code cleaned
+
 0.0.1 : 2010-09-16
 Initial release

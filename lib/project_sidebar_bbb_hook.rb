@@ -17,7 +17,8 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
 
         server = Setting.plugin_redmine_bbb['bbb_ip']
         #First, test if meeting room already exists
-        data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + Digest::SHA1.hexdigest("root"+@project.identifier), true)
+        moderatorPW=Digest::SHA1.hexdigest("root"+@project.identifier)
+        data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + moderatorPW, true)
         doc = ActiveSupport::XmlMini.parse(data)
         if doc && doc['response'] && doc['response']['running']
           if doc['response']['running']['__content__'] != "true"
@@ -57,9 +58,7 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
     end
   end
 
-  def callApi (server, api, arg, getcontent)
-    #    param = URI.escape(arg)
-    param = arg
+  def callApi (server, api, param, getcontent)
     salt = Setting.plugin_redmine_bbb['bbb_salt']
     tmp = api + param + salt
     checksum = Digest::SHA1.hexdigest(tmp)

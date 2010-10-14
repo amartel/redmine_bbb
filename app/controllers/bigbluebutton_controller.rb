@@ -10,49 +10,30 @@ class BigbluebuttonController < ApplicationController
 
   def start
       back_url = Setting.plugin_redmine_bbb['bbb_url'].empty? ? request.referer : Setting.plugin_redmine_bbb['bbb_url']
-#    RAILS_DEFAULT_LOGGER.info "referer: #{request.referer}"
     #First, test if meeting room already exists
-#    data = callApi(server, "isMeetingRunning","RunningmeetingID=" + @project.identifier, true)
     server = Setting.plugin_redmine_bbb['bbb_ip']
-    data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + Digest::SHA1.hexdigest("root"+@project.identifier), true)
-    doc = ActiveSupport::XmlMini.parse(data)
     moderatorPW=Digest::SHA1.hexdigest("root"+@project.identifier)
-    #RAILS_DEFAULT_LOGGER.info "moderatorPW1: #{moderatorPW}"
+    data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + moderatorPW, true)
+    doc = ActiveSupport::XmlMini.parse(data)
     if !doc || !doc['response'] || !doc['response']['running']
       #If not, we created it...
-      bridge = "0000" + @project.id.to_s
+      bridge = "77777" + @project.id.to_s
       bridge = bridge[-5,5]
-      data = callApi(server, "create","name=" + URI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + Digest::SHA1.hexdigest("guest"+@project.identifier) + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
+      data = callApi(server, "create","name=" + CGI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + Digest::SHA1.hexdigest("guest"+@project.identifier) + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
     else
       moderatorPW = doc['response']['moderatorPW']['__content__']
     end
     #Now, join meeting...
     server = Setting.plugin_redmine_bbb['bbb_server']
-    url = callApi(server, "join", "meetingID=" + @project.identifier + "&password="+ moderatorPW + "&fullName=" + URI.escape(User.current.name), false)
+    url = callApi(server, "join", "meetingID=" + @project.identifier + "&password="+ moderatorPW + "&fullName=" + CGI.escape(User.current.name), false)
 
-#    cookie_bbb = request.remote_ip + "|" + User.current.login + "|" + moderatorPW + "|.............................................................................................................."
-    #Maintenant, on crypte...
-#    aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
-#    aes.encrypt
-#    aes.key = Setting.plugin_redmine_bbb['bbb_salt'][0,16]
-#    aes.iv = "123a567b90a1cde2"
-#    aes.padding = 0
-    
-#    cookie_crypted = aes.update(cookie_bbb[0,160])
-#    cookie_crypted << aes.final
-
-#    cookies[:redmine_bbb] = { :value => Base64.encode64(cookie_crypted), :domain => request.domain}
-      
-#    redirect_to URI.escape(url)
     redirect_to url
 
 
   end
   
   private
-  def callApi (server, api, arg, getcontent)
-#    param = URI.escape(arg)
-    param = arg
+  def callApi (server, api, param, getcontent)
     salt = Setting.plugin_redmine_bbb['bbb_salt']
     tmp = api + param + salt
     checksum = Digest::SHA1.hexdigest(tmp)
