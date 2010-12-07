@@ -13,8 +13,8 @@ Redmine::Plugin.register :redmine_bbb do
   description 'Interface with BigBlueButton server'
   version '0.1.0'
 
-  settings :default => {'bbb_server' => ''}, :partial => 'settings/settings'
-  settings :default => {'bbb_salt' => ''}, :partial => 'settings/settings'
+  settings :default => {'bbb_server' => ''}, :partial => 'settings-bbb/settings'
+  settings :default => {'bbb_salt' => ''}, :partial => 'settings-bbb/settings'
   
   project_module :bigbluebutton do
     permission :bigbluebutton_access, :bigbluebutton => :start, :public => true
