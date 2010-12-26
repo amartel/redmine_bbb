@@ -1,8 +1,14 @@
 # French strings go
 fr:
   label_bigbluebutton: Réunion virtuelle
-  label_bigbluebutton_join: Entrer en réunion
+  label_bigbluebutton_join: Rejoindre la réunion
   label_bigbluebutton_people: "Participants"
   label_bigbluebutton_status: "Etat"
   label_bigbluebutton_status_running: En cours
   label_bigbluebutton_status_closed: Non demarré
+  
+  permission_bigbluebutton_join: Rejoindre une réunion
+  permission_bigbluebutton_start: Démarrer une réunion
+  permission_bigbluebutton_moderator: Moderateur
+  label_bigbluebutton_start: Démarrer la réunion
+  

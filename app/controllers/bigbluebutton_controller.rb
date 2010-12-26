@@ -9,25 +9,35 @@ class BigbluebuttonController < ApplicationController
   before_filter :find_project, :authorize, :find_user
 
   def start
-      back_url = Setting.plugin_redmine_bbb['bbb_url'].empty? ? request.referer : Setting.plugin_redmine_bbb['bbb_url']
+    back_url = Setting.plugin_redmine_bbb['bbb_url'].empty? ? request.referer : Setting.plugin_redmine_bbb['bbb_url']
+    ok_to_join = false
     #First, test if meeting room already exists
     server = Setting.plugin_redmine_bbb['bbb_ip']
     moderatorPW=Digest::SHA1.hexdigest("root"+@project.identifier)
+    attendeePW=Digest::SHA1.hexdigest("guest"+@project.identifier)
+    
     data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + moderatorPW, true)
     doc = ActiveSupport::XmlMini.parse(data)
     if !doc || !doc['response'] || !doc['response']['running']
       #If not, we created it...
-      bridge = "77777" + @project.id.to_s
-      bridge = bridge[-5,5]
-      data = callApi(server, "create","name=" + CGI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + Digest::SHA1.hexdigest("guest"+@project.identifier) + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
+      if @user.allowed_to?(:bigbluebutton_start, @project)
+        bridge = "77777" + @project.id.to_s
+        bridge = bridge[-5,5]
+        data = callApi(server, "create","name=" + CGI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + attendeePW + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
+        ok_to_join = true
+      end
     else
       moderatorPW = doc['response']['moderatorPW']['__content__']
+      ok_to_join = true
     end
     #Now, join meeting...
-    server = Setting.plugin_redmine_bbb['bbb_server']
-    url = callApi(server, "join", "meetingID=" + @project.identifier + "&password="+ moderatorPW + "&fullName=" + CGI.escape(User.current.name), false)
-
-    redirect_to url
+    if ok_to_join
+      server = Setting.plugin_redmine_bbb['bbb_server']
+      url = callApi(server, "join", "meetingID=" + @project.identifier + "&password="+ (@user.allowed_to?(:bigbluebutton_moderator, @project) ? moderatorPW : attendeePW) + "&fullName=" + CGI.escape(User.current.name), false)
+      redirect_to url
+    else
+      redirect_to back_url
+    end
 
 
   end
@@ -64,12 +74,7 @@ class BigbluebuttonController < ApplicationController
 
   # Authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = params[:action], global = false)
-    case action
-    when "rootwebdav", "webdavnf"
-      allowed = true
-    else
-      allowed = User.current.allowed_to?({:controller => ctrl, :action => action}, @project, :global => global)
-    end
+    allowed = User.current.allowed_to?({:controller => ctrl, :action => action}, @project, :global => global)
     allowed ? true : deny_access
   end
     

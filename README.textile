@@ -18,15 +18,29 @@ h3. 3. Configure REDMINE with your web browser
 
 If everything is OK, you should see BigBlueButton plugin in the plugin list (Administration -> Plugins)
 Then, you have to configure the plugin:
-* url of your BigBlueButton server
-* salt of your BBB server (to allow use of APIs)
-* url where to be redirected at the end of the meeting (leave blank if you want to be redirected to the project's overview tab)
-* choose if you want to start the meeting in a popup window or not. A popup window is useful because it allows you to resize the windows at the maximum size with chat available... (When switching to fullscreen, chat is disable due to security reasons in the flash plugin...)
+* BigBlueButton server: public url of your BigBlueButton server (ie: used by user's browser)
+* Internal address: private url of your BigBlueButton server (if any). Useful when your BBB server is behind a firewall...
+* Salt: salt of your BBB server (to allow use of APIs)
+* return url: url where to be redirected at the end of the meeting (leave blank if you want to be redirected to the project's overview tab)
+* Use popup window: choose if you want to start the meeting in a popup window or not. A popup window is useful because it allows you to resize the windows at the maximum size with chat available... (When switching to fullscreen, chat is disable due to security reasons in the flash plugin...)
 
-A new permission is now available (BigBlueButton -> Bigbluebutton access) and you have to assign it to the roles you need
+New permissions are now available (in BigBlueButton section):
+* :bigbluebutton_join allows user to join a started meeting
+* :bigbluebutton_start allows user to create and start a new meeting
+* :bigbluebutton_moderator grants a MODERATOR access to the user in the meeting
 
 When the plugin is activated in a project, you should see a new section "virtual meeting" in the project's overview tab. If not, check your settings (the plugin doesn't display the section if it is not possible to open a connection with the BBB server...)
 
 h1. History
+
+0.1.1 : 2010-12-27
+new: German localization
+new: Permission to allow meeting creation
+new: Permission to grant MODERATOR role in meeting
+
+0.1.0 : 2010-10-14
+new: Dutch localization
+fixed: change URI.escape() with CGI.escape() for better support of extended chars in usernames
+and code cleaned
 
 0.0.1: Initial release

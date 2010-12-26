@@ -1,3 +1,8 @@
+0.1.1 : 2010-12-27
+new: German localization
+new: Permission to allow meeting creation
+new: Permission to grant MODERATOR role in meeting
+
 0.1.0 : 2010-10-14
 new: Dutch localization
 fixed: change URI.escape() with CGI.escape() for better support of extended chars in usernames
