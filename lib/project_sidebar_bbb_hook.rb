@@ -1,5 +1,6 @@
 # Provides a link to the issue age graph on the issue index page
 require 'open-uri'
+require 'rexml/document'
 
 class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
   def view_projects_show_sidebar_bottom(context = { })
@@ -9,37 +10,29 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
       if User.current.allowed_to?(:bigbluebutton_join, @project) || User.current.allowed_to?(:bigbluebutton_start, @project)
         output << "<h3>#{l(:label_bigbluebutton)}</h3>"
 
-        server = Setting.plugin_redmine_bbb['bbb_ip']
+        server = Setting.plugin_redmine_bbb['bbb_ip'].empty? ? Setting.plugin_redmine_bbb['bbb_server'] : Setting.plugin_redmine_bbb['bbb_ip']
         meeting_started=false
         #First, test if meeting room already exists
         moderatorPW=Digest::SHA1.hexdigest("root"+@project.identifier)
         data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + moderatorPW, true)
-        doc = ActiveSupport::XmlMini.parse(data)
-        if doc && doc['response'] && doc['response']['running']
-          if doc['response']['running']['__content__'] != "true"
+	doc = REXML::Document.new(data)
+	if doc.root.elements['returncode'].text == "FAILED"
             output << "#{l(:label_bigbluebutton_status)}: <b>#{l(:label_bigbluebutton_status_closed)}</b><br><br>"
-          else
+        else
             meeting_started = true
-
             if Setting.plugin_redmine_bbb['bbb_popup'] != '1'
               output << link_to(l(:label_bigbluebutton_join), {:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true})
             else
               output << "<a href='' onclick='javascript:var wihe = \"width=\"+screen.availWidth+\",height=\"+screen.availHeight; open(\"" + url_for(:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true) + "\",\"Meeting\",\"directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,\" + wihe);return false;'>#{l(:label_bigbluebutton_join)}</a>"
             end
             output << "<br><br>"
-
             output << "#{l(:label_bigbluebutton_status)}: <b>#{l(:label_bigbluebutton_status_running)}</b>"
             output << "<br><i>#{l(:label_bigbluebutton_people)}:</i><br>"
 
-            if doc['response']['attendees'] && doc['response']['attendees']['attendee']
-              each_xml_element(doc['response']['attendees'], 'attendee') do |element|
-                name=element['fullName']['__content__']
-                output << "&nbsp;&nbsp;- #{name}<br>"
-              end
-            end
-          end
-        else
-          output << "#{l(:label_bigbluebutton_status)}: <b>#{l(:label_bigbluebutton_status_closed)}</b><br><br>"
+	    doc.root.elements['attendees'].each do |attendee|
+	       name=attendee.elements['fullName'].text
+               output << "&nbsp;&nbsp;- #{name}<br>"
+	    end
         end
 
         if !meeting_started

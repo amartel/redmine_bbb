@@ -3,31 +3,38 @@ require 'digest/sha1'
 require 'open-uri'
 require 'openssl'
 require 'base64'
+require 'rexml/document'
 
 class BigbluebuttonController < ApplicationController
 
   before_filter :find_project, :authorize, :find_user
 
   def start
-    back_url = Setting.plugin_redmine_bbb['bbb_url'].empty? ? request.referer : Setting.plugin_redmine_bbb['bbb_url']
+    back_url = Setting.plugin_redmine_bbb['bbb_url'].empty? ? request.referer.to_s : Setting.plugin_redmine_bbb['bbb_url']
     ok_to_join = false
     #First, test if meeting room already exists
-    server = Setting.plugin_redmine_bbb['bbb_ip']
+    server = Setting.plugin_redmine_bbb['bbb_ip'].empty? ? Setting.plugin_redmine_bbb['bbb_server'] : Setting.plugin_redmine_bbb['bbb_ip']
     moderatorPW=Digest::SHA1.hexdigest("root"+@project.identifier)
     attendeePW=Digest::SHA1.hexdigest("guest"+@project.identifier)
     
     data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + moderatorPW, true)
-    doc = ActiveSupport::XmlMini.parse(data)
-    if !doc || !doc['response'] || !doc['response']['running']
+    doc = REXML::Document.new(data)
+    if doc.root.elements['returncode'].text == "FAILED"
       #If not, we created it...
       if @user.allowed_to?(:bigbluebutton_start, @project)
         bridge = "77777" + @project.id.to_s
         bridge = bridge[-5,5]
+        x = "name=" + CGI.escape(@project.name) 
+        x += "&meetingID=" + @project.identifier 
+        x += "&attendeePW=" + attendeePW 
+        x += "&moderatorPW=" + moderatorPW 
+        x += "&logoutURL=" + back_url 
+        x += "&voiceBridge=" + bridge
         data = callApi(server, "create","name=" + CGI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + attendeePW + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
         ok_to_join = true
       end
     else
-      moderatorPW = doc['response']['moderatorPW']['__content__']
+      #moderatorPW = doc['response']['moderatorPW']['__content__']
       ok_to_join = true
     end
     #Now, join meeting...
