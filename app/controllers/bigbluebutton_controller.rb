@@ -34,7 +34,7 @@ class BigbluebuttonController < ApplicationController
         ok_to_join = true
       end
     else
-      #moderatorPW = doc['response']['moderatorPW']['__content__']
+      moderatorPW = doc.root.elements['moderatorPW'].text
       ok_to_join = true
     end
     #Now, join meeting...
