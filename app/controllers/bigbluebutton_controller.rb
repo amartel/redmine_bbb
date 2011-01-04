@@ -24,12 +24,6 @@ class BigbluebuttonController < ApplicationController
       if @user.allowed_to?(:bigbluebutton_start, @project)
         bridge = "77777" + @project.id.to_s
         bridge = bridge[-5,5]
-        x = "name=" + CGI.escape(@project.name) 
-        x += "&meetingID=" + @project.identifier 
-        x += "&attendeePW=" + attendeePW 
-        x += "&moderatorPW=" + moderatorPW 
-        x += "&logoutURL=" + back_url 
-        x += "&voiceBridge=" + bridge
         data = callApi(server, "create","name=" + CGI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + attendeePW + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
         ok_to_join = true
       end
