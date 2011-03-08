@@ -24,3 +24,8 @@ This will allow you to use a BigBlueButton server from REDMINE.
 <%= check_box_tag 'settings[bbb_popup]', 1, @settings['bbb_popup'] %><br />
 <em>Checked if you want to use a popup window without menu, toolbars, etc... (chat is not allowed in fullscreen mode)</em>
 </p>
+
+<p><label>Help url</label>
+<%= text_field_tag 'settings[bbb_help]', @settings['bbb_help'], :size => 80 %><br />
+<em>url of the help page</em>
+</p>

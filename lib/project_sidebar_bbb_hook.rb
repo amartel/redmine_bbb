@@ -8,7 +8,10 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
     output = ""
     begin
       if User.current.allowed_to?(:bigbluebutton_join, @project) || User.current.allowed_to?(:bigbluebutton_start, @project)
-        output << "<h3>#{l(:label_bigbluebutton)}</h3>"
+        url = Setting.plugin_redmine_bbb['bbb_help']
+        link = url.empty? ? "" : "&nbsp;&nbsp;<a href='" + url + "' target='_blank' class='icon icon-help'>&nbsp;</a>"
+
+        output << "<h3>#{l(:label_bigbluebutton)}#{link}</h3>"
 
         server = Setting.plugin_redmine_bbb['bbb_ip'].empty? ? Setting.plugin_redmine_bbb['bbb_server'] : Setting.plugin_redmine_bbb['bbb_ip']
         meeting_started=false

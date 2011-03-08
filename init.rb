@@ -11,7 +11,7 @@ Redmine::Plugin.register :redmine_bbb do
   name 'BigBlueButton plugin'
   author 'Arnaud Martel'
   description 'Interface with BigBlueButton server'
-  version '0.1.1'
+  version '0.1.2'
 
   settings :default => {'bbb_server' => '', 'bbb_salt' => ''}, :partial => 'settings-bbb/settings'
   
