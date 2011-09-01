@@ -16,7 +16,7 @@ Redmine::Plugin.register :redmine_bbb do
   settings :default => {'bbb_server' => '', 'bbb_salt' => ''}, :partial => 'settings-bbb/settings'
   
   project_module :bigbluebutton do
-    permission :bigbluebutton_join, :bigbluebutton => :start
+    permission :bigbluebutton_join, :bbb => :start
     permission :bigbluebutton_start, {}
     permission :bigbluebutton_moderator, {}
   end

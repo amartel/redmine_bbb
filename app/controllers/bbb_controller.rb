@@ -5,7 +5,7 @@ require 'openssl'
 require 'base64'
 require 'rexml/document'
 
-class BigbluebuttonController < ApplicationController
+class BbbController < ApplicationController
 
   before_filter :find_project, :authorize, :find_user
 

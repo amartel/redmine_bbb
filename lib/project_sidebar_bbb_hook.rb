@@ -24,9 +24,9 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
         else
             meeting_started = true
             if Setting.plugin_redmine_bbb['bbb_popup'] != '1'
-              output << link_to(l(:label_bigbluebutton_join), {:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true})
+              output << link_to(l(:label_bigbluebutton_join), {:controller => 'bbb', :action => 'start', :project_id => context[:project], :only_path => true})
             else
-              output << "<a href='' onclick='javascript:var wihe = \"width=\"+screen.availWidth+\",height=\"+screen.availHeight; open(\"" + url_for(:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true) + "\",\"Meeting\",\"directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,\" + wihe);return false;'>#{l(:label_bigbluebutton_join)}</a>"
+              output << "<a href='' onclick='javascript:var wihe = \"width=\"+screen.availWidth+\",height=\"+screen.availHeight; open(\"" + url_for(:controller => 'bbb', :action => 'start', :project_id => context[:project], :only_path => true) + "\",\"Meeting\",\"directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,\" + wihe);return false;'>#{l(:label_bigbluebutton_join)}</a>"
             end
             output << "<br><br>"
             output << "#{l(:label_bigbluebutton_status)}: <b>#{l(:label_bigbluebutton_status_running)}</b>"
@@ -41,9 +41,9 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
         if !meeting_started
           if User.current.allowed_to?(:bigbluebutton_start, @project)
             if Setting.plugin_redmine_bbb['bbb_popup'] != '1'
-              output << link_to(l(:label_bigbluebutton_start), {:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true})
+              output << link_to(l(:label_bigbluebutton_start), {:controller => 'bbb', :action => 'start', :project_id => context[:project], :only_path => true})
             else
-              output << "<a href='' onclick='javascript:var wihe = \"width=\"+screen.availWidth+\",height=\"+screen.availHeight; open(\"" + url_for(:controller => 'bigbluebutton', :action => 'start', :project_id => context[:project], :only_path => true) + "\",\"Meeting\",\"directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,\" + wihe);return false;'>#{l(:label_bigbluebutton_start)}</a>"
+              output << "<a href='' onclick='javascript:var wihe = \"width=\"+screen.availWidth+\",height=\"+screen.availHeight; open(\"" + url_for(:controller => 'bbb', :action => 'start', :project_id => context[:project], :only_path => true) + "\",\"Meeting\",\"directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no,\" + wihe);return false;'>#{l(:label_bigbluebutton_start)}</a>"
             end
             output << "<br><br>"
           end
