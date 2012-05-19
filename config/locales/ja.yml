@@ -1,0 +1,13 @@
+# Japanese strings go
+ja:
+  label_bigbluebutton: Web会議
+  label_bigbluebutton_join: 会議に参加する
+  label_bigbluebutton_people: "参加中のユーザ"
+  label_bigbluebutton_status: "状態"
+  label_bigbluebutton_status_running: 開催中
+  label_bigbluebutton_status_closed: 未開催
+
+  permission_bigbluebutton_join: 会議への参加
+  permission_bigbluebutton_start: 会議の開催
+  permission_bigbluebutton_moderator: モデレータ
+  label_bigbluebutton_start: 会議を開催する
