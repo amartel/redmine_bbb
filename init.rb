@@ -5,7 +5,7 @@ Dir::foreach(File.join(File.dirname(__FILE__), 'lib')) do |file|
   require file
 end
 
-require_dependency 'redmine_bbb/hooks'
+require_dependency 'project_sidebar_bbb_hook'
 
 Redmine::Plugin.register :redmine_bbb do
   name 'BigBlueButton plugin'

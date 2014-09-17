@@ -3,11 +3,10 @@ de:
  label_bigbluebutton_join: Starte meeting
  label_bigbluebutton_people: "Teilnehmer"
  label_bigbluebutton_status: "Status"
- label_bigbluebutton_status_running: läuft
- label_bigbluebutton_status_closed: inaktiv
+ label_bigbluebutton_status_running: Läuft
+ label_bigbluebutton_status_closed: Nocht nicht gestartet
 
  permission_bigbluebutton_join: teilnehmen
  permission_bigbluebutton_start: erstellen
  permission_bigbluebutton_moderator: moderieren
  label_bigbluebutton_start: Meeting starten
- label_bigbluebutton_error: Service gerade nicht erreichbar
