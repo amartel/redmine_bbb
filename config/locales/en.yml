@@ -4,11 +4,11 @@ en:
   label_bigbluebutton_join: Enter meeting
   label_bigbluebutton_people: "Connected people"
   label_bigbluebutton_status: "State"
-  label_bigbluebutton_status_running: running
-  label_bigbluebutton_status_closed: inactiv
+  label_bigbluebutton_status_running: Running
+  label_bigbluebutton_status_closed: Not started
 
-  permission_bigbluebutton_join: join
-  permission_bigbluebutton_start: create
+  permission_bigbluebutton_join: Join a meeting
+  permission_bigbluebutton_start: Start new meeting
   permission_bigbluebutton_moderator: Moderator
   label_bigbluebutton_start: Start meeting
-  label_bigbluebutton_error: service temporary not available
+  
