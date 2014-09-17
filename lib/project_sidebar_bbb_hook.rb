@@ -52,7 +52,8 @@ class ProjectSidebarBigBlueButtonHook < Redmine::Hook::ViewListener
 
       end
     rescue
-      output = ""
+      output = "<h3>#{l(:label_bigbluebutton)}</h3>"
+      output << "#{l(:label_bigbluebutton_error)}"
     end
     return output
   end
