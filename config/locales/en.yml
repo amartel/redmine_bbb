@@ -11,4 +11,4 @@ en:
   permission_bigbluebutton_start: Start new meeting
   permission_bigbluebutton_moderator: Moderator
   label_bigbluebutton_start: Start meeting
-  
+  label_bigbluebutton_error: Service temporary not available
