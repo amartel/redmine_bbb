@@ -35,7 +35,5 @@ class BBBPeople
     else
       url
     end
-
   end
-
 end
