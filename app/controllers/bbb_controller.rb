@@ -22,7 +22,7 @@ class BbbController < ApplicationController
     if doc.root.elements['returncode'].text == "FAILED"
       #If not, we created it...
       if @user.allowed_to?(:bigbluebutton_start, @project)
-        bridge = "77777" + @project.id.to_s
+        bridge = "00000" + @project.id.to_s
         bridge = bridge[-5,5]
         data = callApi(server, "create","name=" + CGI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + attendeePW + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
         ok_to_join = true
