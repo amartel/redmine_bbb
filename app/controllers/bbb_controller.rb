@@ -1,63 +1,53 @@
 require 'digest/sha1'
-#require 'net/http'
-require 'open-uri'
-require 'openssl'
-require 'base64'
-require 'rexml/document'
 
 class BbbController < ApplicationController
-
   before_filter :find_project, :authorize, :find_user
 
   def start
-    back_url = Setting.plugin_redmine_bbb['bbb_url'].empty? ? request.referer.to_s : Setting.plugin_redmine_bbb['bbb_url']
+    # Check if key is correct
+    salt = Bbb.salt
+    id = params[:id]
+    key = params[:key]
+    if id and key and (Digest::SHA1.hexdigest(id + @project.identifier + salt)[-16,16] == key) then
+        meetingID = id
+        meeting_name = CGI.escape("Room number " + meetingID)
+    else
+        # Generate meetingID based on project id starting from 00000
+        meetingID = Bbb.project_to_meetingID(@project)
+        meeting_name = CGI.escape(@project.name)
+    end
+
+    bbb = Bbb.new(meetingID)
+    bbb.getinfo
+
     ok_to_join = false
-    #First, test if meeting room already exists
-    server = Setting.plugin_redmine_bbb['bbb_ip'].empty? ? Setting.plugin_redmine_bbb['bbb_server'] : Setting.plugin_redmine_bbb['bbb_ip']
-    moderatorPW=Digest::SHA1.hexdigest("root"+@project.identifier)
-    attendeePW=Digest::SHA1.hexdigest("guest"+@project.identifier)
-    
-    data = callApi(server, "getMeetingInfo","meetingID=" + @project.identifier + "&password=" + moderatorPW, true)
-    doc = REXML::Document.new(data)
-    if doc.root.elements['returncode'].text == "FAILED"
-      #If not, we created it...
+    if bbb.running
+      ok_to_join = true
+    else
       if @user.allowed_to?(:bigbluebutton_start, @project)
-        bridge = "00000" + @project.id.to_s
-        bridge = bridge[-5,5]
-        data = callApi(server, "create","name=" + CGI.escape(@project.name) + "&meetingID=" + @project.identifier + "&attendeePW=" + attendeePW + "&moderatorPW=" + moderatorPW + "&logoutURL=" + back_url + "&voiceBridge=" + bridge, true)
+        bbb.create(meeting_name, request.referer.to_s)
         ok_to_join = true
       end
-    else
-      moderatorPW = doc.root.elements['moderatorPW'].text
-      ok_to_join = true
     end
-    #Now, join meeting...
+
     if ok_to_join
-      server = Setting.plugin_redmine_bbb['bbb_server']
-      url = callApi(server, "join", "meetingID=" + @project.identifier + "&password="+ (@user.allowed_to?(:bigbluebutton_moderator, @project) ? moderatorPW : attendeePW) + "&fullName=" + CGI.escape(User.current.name), false)
-      redirect_to url
+      password = @user.allowed_to?(:bigbluebutton_moderator, @project) ? bbb.moderatorPW : bbb.attendeePW
+      fullName = CGI.escape(User.current.name)
+      redirect_to bbb.join(password, fullName)
     else
-      redirect_to back_url
+      redirect_to bbb.back_url
     end
-
-
   end
-  
+
+  def new_room
+    salt = Bbb.salt
+    # Choose random meetingID, range 10000:99999 
+    @id = (rand(90000) + 10000).to_s
+    @key = Digest::SHA1.hexdigest(@id + @project.identifier + salt)[-16,16]
+    render :action => 'new_room'
+  end
+
   private
-  def callApi (server, api, param, getcontent)
-    salt = Setting.plugin_redmine_bbb['bbb_salt']
-    tmp = api + param + salt
-    checksum = Digest::SHA1.hexdigest(tmp)
-    url = server + "/bigbluebutton/api/" + api + "?" + param + "&checksum=" + checksum
-
-    if getcontent
-      connection = open(url)
-      connection.read
-    else
-      url
-    end
-
-  end
 
   def find_project
     # @project variable must be set before calling the authorize filter
@@ -72,11 +62,4 @@ class BbbController < ApplicationController
     User.current = find_current_user
     @user = User.current
   end
-
-  # Authorize the user for the requested action
-  def authorize(ctrl = params[:controller], action = params[:action], global = false)
-    allowed = User.current.allowed_to?({:controller => ctrl, :action => action}, @project, :global => global)
-    allowed ? true : deny_access
-  end
-    
 end

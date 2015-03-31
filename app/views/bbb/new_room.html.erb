@@ -1,0 +1,7 @@
+<h2>New room</h2>
+
+  <div class="box">
+      <% room_url = url_for :controller => 'bbb', :action => 'start', :only_path => false, :project_id => @project.identifier, :id => @id, :key => @key %>
+      <h3>Please share this link with participants:</h3>
+      <%= link_to room_url, room_url %>
+  </div>

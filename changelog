@@ -1,3 +1,11 @@
+0.2.0 : 2015-04-01 Stanislav German-Evtushenko <ginermail@gmail.com>
+change: refactoring and clean up (to be more compliant with MVC pattern)
+fix: meetingID matches bridgeID in order to avoid partial interference when bridgeIDs are the same and meetingIDs are different
+fix: meetingID starts from 00000 instead of 77777
+new: bbb macro (check {{macro_list}} to see all macros)
+new: randomly generated private rooms
+fixme: some translations are missing and hardcoded in English
+
 0.1.2 : 2011-03-08
 new: add help link
 
