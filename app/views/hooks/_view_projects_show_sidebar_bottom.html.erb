@@ -1,0 +1,43 @@
+<% if User.current.allowed_to?(:bigbluebutton_join, project) || User.current.allowed_to?(:bigbluebutton_start, project) %>
+
+  <% if bbb.getinfo %>
+    <% help_link = bbb.help_url.empty? ? "" : "&nbsp;&nbsp;" + link_to("", bbb.help_url, :target => "_blank", :class => "icon icon-help") %>
+    <h3><%= l(:label_bigbluebutton) %><%= help_link.html_safe %></h3>
+
+    <% bbb_start_url = url_for(:controller => 'bbb', :action => 'start', :project_id => project, :only_path => true) %>
+    <% js_onclick = %Q[javascript:var wihe = "width=" + screen.availWidth + ", height=" + screen.availHeight; open("#{bbb_start_url}","Meeting","directories=no,location=no,resizable=yes,scrollbars=yes,status=no,toolbar=no," + wihe); return false;].html_safe %>
+
+    <% if bbb.running %>
+      <% if bbb.popup != '1' %>
+        <%= link_to(l(:label_bigbluebutton_join), bbb_start_url) %>
+      <% else %>
+        <a href='' onclick='<%= js_onclick %>'><%= l(:label_bigbluebutton_join) %></a>
+      <% end %>
+      <br><br>
+      <%= l(:label_bigbluebutton_status) %>: <b> <%= l(:label_bigbluebutton_status_running) %></b>
+      <br><i><%= l(:label_bigbluebutton_people) %>:</i><br>
+
+      <% bbb.attendees.each do |attendee| %>
+        &nbsp;&nbsp;- <%= attendee %><br>
+      <% end %>
+
+    <% else %>
+      <%= l(:label_bigbluebutton_status) %>: <b><%= l(:label_bigbluebutton_status_closed) %></b><br><br>
+
+      <% if User.current.allowed_to?(:bigbluebutton_start, project) %>
+        <% if bbb.popup != '1' %>
+          <%= link_to(l(:label_bigbluebutton_start), bbb_start_url) %>
+        <% else %>
+          <a href='' onclick='<%= js_onclick %>'><%= l(:label_bigbluebutton_start) %></a>
+        <% end %>
+        <br>
+      <% end %>
+
+    <% end %>
+    <br>
+    <%= link_to("Create new room", :controller => 'bbb', :action => 'new_room', :project_id => project.identifier) %>
+  <% else %>
+    <h3><%= l(:label_bigbluebutton) %></h3>
+    <%= l(:label_bigbluebutton_error) %>
+  <% end %>
+<% end %>
