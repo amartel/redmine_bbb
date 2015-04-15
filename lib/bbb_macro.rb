@@ -13,7 +13,7 @@ module BbbMacro
       project ||= @project
       return nil unless project
       return nil unless project.module_enabled?("bigbluebutton")
-      return nil unless User.current.allowed_to?(:bigbluebutton_join, @project) || User.current.allowed_to?(:bigbluebutton_start, @project)
+      return nil unless User.current.allowed_to?(:bigbluebutton_join, project) || User.current.allowed_to?(:bigbluebutton_start, project)
 
       # Check second argument
       if args[1] and !args[1].empty?
