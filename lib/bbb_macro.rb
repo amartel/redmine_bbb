@@ -1,6 +1,6 @@
 module BbbMacro
   Redmine::WikiFormatting::Macros.register do
-    desc "Insert the link to the BigBlueButton room. Examples: \n\n <pre>{{bbb}}\n{{bbb(project_id)}}\n{{bbb(project_id, 1)}} - show the number of users online</pre>"
+    desc "Insert the link to the BigBlueButton room. Examples: \n\n <pre>{{bbb}}\n{{bbb(project_id)}}\n{{bbb(project_id, 1)}} - show the number of users online\n{{bbb(project_id, 2)}} - private room link</pre>"
     macro :bbb do |obj, args|
       # Check first argument
       if args[0] and !args[0].empty?
@@ -17,12 +17,17 @@ module BbbMacro
 
       # Check second argument
       if args[1] and !args[1].empty?
-        people_online_show = args[1]
+        case args[1]
+          when "1"
+            people_online_show = true
+          when "2"
+            new_room = true
+        end
       end
 
       # Check people online
       people_online_string = ""
-      if people_online_show == "1"
+      if people_online_show
         meetingID = Bbb.project_to_meetingID(project)
         bbb = Bbb.new(meetingID)
         people_online = bbb.getinfo ? bbb.attendees.size : -1
@@ -34,8 +39,13 @@ module BbbMacro
       end
 
       # Show the link
-      link_name = project.name + " - " + "meeting room"
-      h(link_to(link_name, {:controller => 'bbb', :action => 'start', :project_id => project.identifier}) + people_online_string)
+      if new_room
+        link_name = project.name + " - " + "private room"
+        h(link_to(link_name, {:controller => 'bbb', :action => 'new_room', :project_id => project.identifier}))
+      else
+        link_name = project.name + " - " + "meeting room"
+        h(link_to(link_name, {:controller => 'bbb', :action => 'start', :project_id => project.identifier}) + people_online_string)
+      end
     end
   end
 end
