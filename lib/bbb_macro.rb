@@ -13,7 +13,6 @@ module BbbMacro
       project ||= @project
       return nil unless project
       return nil unless project.module_enabled?("bigbluebutton")
-      return nil unless User.current.allowed_to?(:bigbluebutton_join, project) || User.current.allowed_to?(:bigbluebutton_start, project)
 
       # Check second argument
       if args[1] and !args[1].empty?
@@ -39,12 +38,19 @@ module BbbMacro
       end
 
       # Show the link
+      def self.show_link(name, action, project)
+        if User.current.allowed_to?(:bigbluebutton_join, project) and User.current.allowed_to?(:bigbluebutton_start, project)
+          link_to(name, {:controller => 'bbb', :action => action, :project_id => project.identifier})
+        else
+          name
+        end
+      end
       if new_room
         link_name = project.name + " - " + "private room"
-        h(link_to(link_name, {:controller => 'bbb', :action => 'new_room', :project_id => project.identifier}))
+        h(show_link(link_name, 'new_room', project))
       else
         link_name = project.name + " - " + "meeting room"
-        h(link_to(link_name, {:controller => 'bbb', :action => 'start', :project_id => project.identifier}) + people_online_string)
+        h(show_link(link_name, 'start', project) + people_online_string)
       end
     end
   end
