@@ -33,6 +33,10 @@ When the plugin is activated in a project, you should see a new section "virtual
 
 h1. History
 
+0.2.1 : 2015-05-22 Stanislav German-Evtushenko <ginermail@gmail.com>
+fix: render macro without arguments (i.e. {{bbb}}) for mailer correctly
+fix: render full link path and not relative for mailer, i.e. https://myredmine/path/to/bbb instead of /path/to/bbb
+
 0.2.0 : 2015-04-01 Stanislav German-Evtushenko <ginermail@gmail.com>
 change: refactoring and clean up (to be more compliant with MVC pattern)
 fix: meetingID matches bridgeID in order to avoid partial interference when bridgeIDs are the same and meetingIDs are different
