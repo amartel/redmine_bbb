@@ -10,7 +10,7 @@ module BbbMacro
       end
 
       # Check if project exists, bigbluebutton module is enabled and user has permissions
-      project ||= @project
+      project = @project || (obj && obj.project) unless project
       return nil unless project
       return nil unless project.module_enabled?("bigbluebutton")
 
@@ -40,7 +40,8 @@ module BbbMacro
       # Show the link
       def self.show_link(name, action, project)
         if User.current.allowed_to?(:bigbluebutton_join, project) and User.current.allowed_to?(:bigbluebutton_start, project)
-          link_to(name, {:controller => 'bbb', :action => action, :project_id => project.identifier})
+          url = url_for(:controller => 'bbb', :action => action, :project_id => project.identifier, :only_path => @only_path)
+          link_to(name, url)
         else
           name
         end
