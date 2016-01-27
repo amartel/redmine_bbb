@@ -1,0 +1,14 @@
+# Belarusian strings go
+by:
+  label_bigbluebutton: Вэб сустрэча
+  label_bigbluebutton_join: Увайсці у сутрэчу
+  label_bigbluebutton_people: "Падлучаныя карыстальнікі"
+  label_bigbluebutton_status: "Стан"
+  label_bigbluebutton_status_running: Запушчаны
+  label_bigbluebutton_status_closed: Не пачаўся
+
+  permission_bigbluebutton_join: Далучыцца да сутрэчы
+  permission_bigbluebutton_start: Пачаць новую сустрэчу
+  permission_bigbluebutton_moderator: Запавольнік
+  label_bigbluebutton_start: Пачаць сустрэчу
+  label_bigbluebutton_error: Паслугі часова не даступныя
