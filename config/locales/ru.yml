@@ -1,0 +1,14 @@
+# Russian strings go
+en:
+  label_bigbluebutton: Веб собрание
+  label_bigbluebutton_join: Присоединится к собранию
+  label_bigbluebutton_people: "Подключенные участники"
+  label_bigbluebutton_status: "Состояние"
+  label_bigbluebutton_status_running: Запущен
+  label_bigbluebutton_status_closed: Не начался
+
+  permission_bigbluebutton_join: Присоединиться к собранию
+  permission_bigbluebutton_start: Начать новое собрание
+  permission_bigbluebutton_moderator: Модератор
+  label_bigbluebutton_start: Начать собрание
+  label_bigbluebutton_error: Сервис временно недоступен
